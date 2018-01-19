@@ -25,8 +25,33 @@
         <h1>{{list.listName}}</h1>
 
         <div class='card'
+             ng-controller="cardCtrl as cardCtrl"
              ng-repeat='card in listCtrl.getCards(list)'>
-        {{card.description}}
+
+          <div ng-if='!cardCtrl.isEditing'>
+            {{card.description}}
+            <div ng-click='cardCtrl.editCard(card)'
+                 class='edit-small edit-card hand'>
+            </div>
+            <div ng-click='cardCtrl.deleteCard(card)'
+                 class='remove-small remove-card hand'>
+            </div>
+          </div>
+
+          <div ng-if='cardCtrl.isEditing'>
+            <form ng-submit='cardCtrl.updateCard()'>
+              <input type='text'
+                     close-editing
+                     is-editing='cardCtrl.isEditing'
+                     ng-model='cardCtrl.editingCard.description'>
+              <select class='select-list'
+                      ng-model='cardCtrl.editingCard.list_id'
+                      ng-change="cardCtrl.updateCard()"
+                      ng-options="list.id as list.listName for list in listsCtrl.lists">
+              </select>
+            </form>
+          </div>
+
         </div>
 
         <a ng-click="listCtrl.removeList(list)" class="hand">
@@ -67,5 +92,7 @@
   <script src="js/factories/cardFactory.js"></script>
   <script src="js/controllers/listsCtrl.js"></script>
   <script src="js/controllers/listCtrl.js"></script>
+  <script src="js/controllers/cardCtrl.js"></script>
+  <script src="js/directives/closeEditing.js"></script>
 </body>
 </html>
